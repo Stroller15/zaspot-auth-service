@@ -1,25 +1,27 @@
 {
-    "name": "auth-service",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-        "dev": "node src/index.js",
-        "formate:fix": "npx prettier . --write",
-        "formate:check": "npx prettier . --check",
-        "lint:check": "eslint .",
-        "lint:fix": "eslint . --fix",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "shubham verma <shubham.enggg@gmail.com>",
-    "license": "ISC",
-    "description": "User management/auth service",
-    "devDependencies": {
-        "@eslint/js": "^9.14.0",
-        "@types/eslint__js": "^8.42.3",
-        "@types/node": "^22.9.0",
-        "eslint": "^9.14.0",
-        "prettier": "3.3.3",
-        "typescript": "^5.6.3",
-        "typescript-eslint": "^8.14.0"
-    }
+  "name": "auth-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node src/index.js",
+    "formate:fix": "npx prettier . --write",
+    "formate:check": "npx prettier . --check",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "author": "shubham verma <shubham.enggg@gmail.com>",
+  "license": "ISC",
+  "description": "User management/auth service",
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.9.0",
+    "eslint": "^9.14.0",
+    "husky": "^9.1.6",
+    "prettier": "3.3.3",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.14.0"
+  }
 }
