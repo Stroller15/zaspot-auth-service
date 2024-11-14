@@ -1,5 +1,7 @@
-function sum(a: string, b: number) {
-  return a + b;
-}
+const user = {
+    fName: 'shubham',
+};
 
-console.log(sum("4", 5));
+const u = user.fName;
+
+console.log(u);
