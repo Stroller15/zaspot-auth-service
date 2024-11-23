@@ -8,7 +8,7 @@
         "format:check": "npx prettier \"src/**/*.ts\" --check",
         "lint:check": "eslint \"src/**/*.ts\"",
         "lint:fix": "eslint \"src/**/*.ts\" --fix",
-        "test": "jest --watch --runInBand",
+        "test": "jest --runInBand",
         "prepare": "husky install"
     },
     "author": "shubham verma <shubham.enggg@gmail.com>",
