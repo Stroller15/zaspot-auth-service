@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon src/index.ts",
+        "dev": "nodemon src/server.ts",
         "format:fix": "npx prettier \"src/**/*.ts\" --write",
         "format:check": "npx prettier \"src/**/*.ts\" --check",
         "lint:check": "eslint \"src/**/*.ts\"",
