@@ -1,12 +1,15 @@
-import express, { Request, Response, Application, NextFunction } from 'express';
-import logger from './config/logger';
-import { HttpError } from 'http-errors';
+import express, { Request, Response, NextFunction } from "express";
+import logger from "./config/logger";
+import { HttpError } from "http-errors";
 
-const app: Application = express();
+const app = express();
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Welcome to auth service');
+app.get("/", (req: Request, res: Response) => {
+    res.send("Welcome to auth service");
 });
+
+import authRouter from "./routes/auth.route";
+app.use("/auth", authRouter);
 
 //*** golbal error handling
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,7 +18,7 @@ app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
     const statusCode = err.statusCode || 500;
 
     res.status(statusCode).json({
-        errors: [{ type: err.name, msg: err.message, path: '', location: '' }],
+        errors: [{ type: err.name, msg: err.message, path: "", location: "" }],
     });
 });
 
