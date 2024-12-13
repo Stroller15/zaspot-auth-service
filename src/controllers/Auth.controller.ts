@@ -1,23 +1,37 @@
-import { Response } from "express";
-import { AppDataSource } from "../config/data-source";
-import { User } from "../entity/User";
+import { NextFunction, Response } from "express";
 import { RegisterUserRequest } from "../types";
+import { AuthService } from "../services/Auth.service";
+import { Logger } from "winston";
 
 export class AuthController {
-    async register(req: RegisterUserRequest, res: Response) {
+    constructor(
+        private authService: AuthService,
+        private logger: Logger,
+    ) {}
+
+    async register(
+        req: RegisterUserRequest,
+        res: Response,
+        next: NextFunction,
+    ) {
+        const { firstName, lastName, email, password } = req.body;
+        this.logger.debug("New register to register a user", {
+            firstName,
+            lastName,
+            email,
+            password: "*******",
+        });
         try {
-            const { firstName, lastName, email, password } = req.body;
-            const userRepository = AppDataSource.getRepository(User);
-            const user = await userRepository.save({
+            const user = await this.authService.create({
                 firstName,
                 lastName,
                 email,
                 password,
             });
-            console.log({ user });
-            res.status(201).json({});
+            this.logger.info("User has been registered", { id: user.id });
+            res.status(201).json(user);
         } catch (error) {
-            console.log(error);
+            next(error);
         }
     }
 }

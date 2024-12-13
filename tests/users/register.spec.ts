@@ -83,11 +83,11 @@ describe("POST /auth/register", () => {
 
             //* A -> Act
             const response = await request(app)
-                .post("/auth/request")
+                .post("/auth/register")
                 .send(userData);
             console.log({ response });
             //* A -> Assert
-            expect(response);
+            expect(response.body).toHaveProperty("id");
         });
     });
     describe("Fields are missing", () => {});
