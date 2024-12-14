@@ -2,8 +2,8 @@ import { DataSource } from "typeorm";
 import app from "../../src/app";
 import request from "supertest";
 import { AppDataSource } from "../../src/config/data-source";
-import { truncateTable } from "../utils";
 import { User } from "../../src/entity/User";
+import { Roles } from "../../src/constants";
 
 describe("POST /auth/register", () => {
     let connection: DataSource;
@@ -13,7 +13,8 @@ describe("POST /auth/register", () => {
 
     beforeEach(async () => {
         //truncate db here for clean testing
-        await truncateTable(connection);
+        await connection.dropDatabase();
+        await connection.synchronize();
     });
     afterAll(async () => {
         await connection?.destroy();
@@ -27,6 +28,7 @@ describe("POST /auth/register", () => {
                 lastName: "Verma",
                 email: "shubham.enggg@gmail.com",
                 password: "secret",
+                role: "customer",
             };
             //* A -> Act
             const response = await request(app)
@@ -59,6 +61,7 @@ describe("POST /auth/register", () => {
                 lastName: "Verma",
                 email: "shubham.enggg@gmail.com",
                 password: "secret",
+                role: "customer",
             };
             //* A -> Act
             const response = await request(app)
@@ -79,15 +82,33 @@ describe("POST /auth/register", () => {
                 lastName: "Verma",
                 email: "shubham.enggg@gmail.com",
                 password: "secret",
+                role: "customer",
             };
 
             //* A -> Act
             const response = await request(app)
                 .post("/auth/register")
                 .send(userData);
-            console.log({ response });
             //* A -> Assert
             expect(response.body).toHaveProperty("id");
+        });
+        it("should assign a customer role only", async () => {
+            //* A -> Arrange
+            const userData = {
+                firstName: "Shubham",
+                lastName: "Verma",
+                email: "shubham.enggg@gmail.com",
+                password: "secret",
+                role: "customer",
+            };
+
+            //* A -> Act
+            await request(app).post("/auth/register").send(userData);
+            //* A -> Assert
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users[0]).toHaveProperty("role");
+            expect(users[0].role).toBe(Roles.CUSTOMER);
         });
     });
     describe("Fields are missing", () => {});
