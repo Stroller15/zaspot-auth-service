@@ -110,7 +110,6 @@ describe("POST /auth/register", () => {
             expect(users[0]).toHaveProperty("role");
             expect(users[0].role).toBe(Roles.CUSTOMER);
         });
-
         it("should be hashed password", async () => {
             //* A -> Arrange
             const userData = {
@@ -132,6 +131,25 @@ describe("POST /auth/register", () => {
             expect(users[0].password).toMatch(
                 /^\$[a-zA-Z0-9]+\$[0-9]+\$[a-zA-Z0-9./]+$/,
             );
+        });
+        it("should return 400 status code if email already exist", async () => {
+            //* A -> Arrange
+            const userData = {
+                firstName: "Shubham",
+                lastName: "Verma",
+                email: "shubham.enggg@gmail.com",
+                password: "secrety",
+                role: "customer",
+            };
+            const userRepository = connection.getRepository(User);
+            await userRepository.save(userData);
+
+            //* A -> Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+            //* A -> Assert
+            expect(response.statusCode).toBe(400);
         });
     });
     describe("Fields are missing", () => {});
