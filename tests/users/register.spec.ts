@@ -149,6 +149,7 @@ describe("POST /auth/register", () => {
                 .post("/auth/register")
                 .send(userData);
             //* A -> Assert
+            console.log(response.statusCode);
             expect(response.statusCode).toBe(400);
         });
     });
