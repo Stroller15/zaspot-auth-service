@@ -151,6 +151,7 @@ describe("POST /auth/register", () => {
             //* A -> Assert
             console.log(response.statusCode);
             expect(response.statusCode).toBe(400);
+            expect(response.body).toHaveProperty("message");
         });
     });
     describe("Fields are missing", () => {});
