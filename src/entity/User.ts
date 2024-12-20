@@ -1,5 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { Roles } from "../constants/index";
+
+export enum Roles {
+    CUSTOMER = "CUSTOMER",
+    MANAGER = "MANAGER",
+    ADMIN = "ADMIN",
+}
 
 @Entity()
 export class User {
@@ -23,5 +28,5 @@ export class User {
         enum: Roles,
         default: Roles.CUSTOMER,
     })
-    role: typeof Roles;
+    role: Roles; // Correct type for the enum
 }

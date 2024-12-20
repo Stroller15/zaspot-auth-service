@@ -139,7 +139,7 @@ describe("POST /auth/register", () => {
                 lastName: "Verma",
                 email: "shubham.enggg@gmail.com",
                 password: "secrety",
-                role: "customer",
+                // role: Roles.CUSTOMER,
             };
             const userRepository = connection.getRepository(User);
             await userRepository.save(userData);
