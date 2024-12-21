@@ -30,6 +30,7 @@ export class AuthController {
                 password,
                 role,
             });
+            console.log(user);
             this.logger.info("User has been registered", { id: user.id });
             res.status(201).json(user);
         } catch (error) {

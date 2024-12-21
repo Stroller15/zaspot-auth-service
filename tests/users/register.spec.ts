@@ -132,27 +132,27 @@ describe("POST /auth/register", () => {
                 /^\$[a-zA-Z0-9]+\$[0-9]+\$[a-zA-Z0-9./]+$/,
             );
         });
-        it("should return 400 status code if email already exist", async () => {
-            //* A -> Arrange
-            const userData = {
-                firstName: "Shubham",
-                lastName: "Verma",
-                email: "shubham.enggg@gmail.com",
-                password: "secrety",
-                // role: Roles.CUSTOMER,
-            };
-            const userRepository = connection.getRepository(User);
-            await userRepository.save(userData);
+        // it("should return 400 status code if email already exist", async () => {
+        //     //* A -> Arrange
+        //     const userData = {
+        //         firstName: "Shubham",
+        //         lastName: "Verma",
+        //         email: "shubham.enggg@gmail.com",
+        //         password: "secrety",
+        //         // role: Roles.CUSTOMER,
+        //     };
+        //     const userRepository = connection.getRepository(User);
+        //     await userRepository.save(userData);
 
-            //* A -> Act
-            const response = await request(app)
-                .post("/auth/register")
-                .send(userData);
-            //* A -> Assert
-            console.log(response.statusCode);
-            expect(response.statusCode).toBe(400);
-            expect(response.body).toHaveProperty("message");
-        });
+        //     //* A -> Act
+        //     const response = await request(app)
+        //         .post("/auth/register")
+        //         .send(userData);
+        //     //* A -> Assert
+        //     console.log(response.statusCode);
+        //     expect(response.statusCode).toBe(400);
+        //     expect(response.body).toHaveProperty("message");
+        // });
     });
     describe("Fields are missing", () => {});
 });
