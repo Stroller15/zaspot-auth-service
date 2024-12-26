@@ -8,24 +8,6 @@ import { Roles } from "../constants";
 export class AuthService {
     constructor(private userRepository: Repository<User>) {}
 
-    async hashPassword(password: string): Promise<string> {
-        const saltRounds = 10;
-        try {
-            const hashedPassword: string = await bcrypt.hash(
-                password,
-                saltRounds,
-            );
-            return hashedPassword;
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error("Error hashing password:", error.message);
-            } else {
-                console.error("Unknown error occurred during hashing.");
-            }
-            throw error;
-        }
-    }
-
     async create({ firstName, lastName, email, password }: userData) {
         const user = await this.userRepository.findOne({
             where: { email: email },
@@ -34,8 +16,10 @@ export class AuthService {
             const err = createHttpError(400, "email already exist");
             throw err;
         }
+        // Hash the password
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
         try {
-            const hashedPassword = await this.hashPassword(password);
             return await this.userRepository.save({
                 firstName,
                 lastName,

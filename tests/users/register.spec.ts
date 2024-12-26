@@ -125,7 +125,6 @@ describe("POST /auth/register", () => {
             //* A -> Assert
             const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
-            console.log(users[0].password);
             expect(users[0].password).not.toBe(userData.password);
             expect(users[0].password).toHaveLength(60);
             expect(users[0].password).toMatch(
@@ -160,11 +159,8 @@ describe("POST /auth/register", () => {
                 email: "",
                 password: "secret",
             };
-            const userRepository = connection.getRepository(User);
-            await userRepository.save({ ...userData, role: Roles.CUSTOMER });
 
             //* Act
-
             const response = await request(app)
                 .post("/auth/register")
                 .send(userData);
