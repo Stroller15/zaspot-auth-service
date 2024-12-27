@@ -24,12 +24,12 @@ describe("POST /auth/register", () => {
             // AAA formula for writing test case
             //* A -> Arrange
             const userData = {
-                firstName: "Shubham",
-                lastName: "Verma",
-                email: "shubham.enggg@gmail.com",
-                password: "secret",
-                role: "customer",
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                password: "P@ssw0rd1",
             };
+
             //* A -> Act
             const response = await request(app)
                 .post("/auth/register")
@@ -40,11 +40,12 @@ describe("POST /auth/register", () => {
         it("shuould be send data in json", async () => {
             //* A -> Arrange
             const userData = {
-                firstName: "Shubham",
-                lastName: "Verma",
-                email: "shubham.enggg@gmail.com",
-                password: "secret",
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                password: "P@ssw0rd1",
             };
+
             //* A -> Act
             const response = await request(app)
                 .post("/auth/register")
@@ -57,12 +58,12 @@ describe("POST /auth/register", () => {
         it("should persist data in the database", async () => {
             //* A -> Arrange
             const userData = {
-                firstName: "Shubham",
-                lastName: "Verma",
-                email: "shubham.enggg@gmail.com",
-                password: "secret",
-                role: "customer",
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                password: "P@ssw0rd1",
             };
+
             //* A -> Act
             const response = await request(app)
                 .post("/auth/register")
@@ -78,11 +79,10 @@ describe("POST /auth/register", () => {
         it("should return id of created new user", async () => {
             //* A -> Arrange
             const userData = {
-                firstName: "Shubham",
-                lastName: "Verma",
-                email: "shubham.enggg@gmail.com",
-                password: "secret",
-                role: "customer",
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                password: "P@ssw0rd1",
             };
 
             //* A -> Act
@@ -95,11 +95,10 @@ describe("POST /auth/register", () => {
         it("should assign a customer role only", async () => {
             //* A -> Arrange
             const userData = {
-                firstName: "Shubham",
-                lastName: "Verma",
-                email: "shubham.enggg@gmail.com",
-                password: "secret",
-                role: "customer",
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                password: "P@ssw0rd1",
             };
 
             //* A -> Act
@@ -113,11 +112,10 @@ describe("POST /auth/register", () => {
         it("should be hashed password", async () => {
             //* A -> Arrange
             const userData = {
-                firstName: "Shubham",
-                lastName: "Verma",
-                email: "shubham.enggg@gmail.com",
-                password: "secrety",
-                role: "customer",
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                password: "P@ssw0rd1",
             };
 
             //* A -> Act
@@ -134,11 +132,12 @@ describe("POST /auth/register", () => {
         it("should return 400 status code if email already exist", async () => {
             //* A -> Arrange
             const userData = {
-                firstName: "Shubham",
-                lastName: "Verma",
-                email: "shubha.enggg@gmail.com",
-                password: "secrety",
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                password: "P@ssw0rd1",
             };
+
             const userRepository = connection.getRepository(User);
             await userRepository.save({ ...userData, role: Roles.CUSTOMER });
 
@@ -154,10 +153,10 @@ describe("POST /auth/register", () => {
         it("should return 400 status code if email field is missing", async () => {
             //* Arrange
             const userData = {
-                firstName: "shubham",
-                lastName: "verma",
+                firstName: "John",
+                lastName: "Doe",
                 email: "",
-                password: "secret",
+                password: "P@ssw0rd1",
             };
 
             //* Act
@@ -167,6 +166,77 @@ describe("POST /auth/register", () => {
 
             //* Assert
             expect(response.statusCode).toBe(400);
+        });
+        it("should return 400 status code if firstname field is missing", async () => {
+            //* Arrange
+            const userData = {
+                firstName: "",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                password: "P@ssw0rd1",
+            };
+
+            //* Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            //* Assert
+            expect(response.statusCode).toBe(400);
+        });
+        it("should return 400 status code if lastname field is missing", async () => {
+            //* Arrange
+            const userData = {
+                firstName: "John",
+                lastName: "",
+                email: "john.doe@example.com",
+                password: "P@ssw0rd1",
+            };
+
+            //* Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            //* Assert
+            expect(response.statusCode).toBe(400);
+        });
+        it("should return 400 status code if password field is missing", async () => {
+            //* Arrange
+            const userData = {
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                password: "",
+            };
+
+            //* Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            //* Assert
+            expect(response.statusCode).toBe(400);
+        });
+    });
+    describe("Fields are not in proper formate", () => {
+        it("should trim the email field", async () => {
+            //* Arrange
+            const userData = {
+                firstName: "John",
+                lastName: "Doe",
+                email: " john.doe@example.com ",
+                password: "P@ssw0rd1",
+            };
+
+            //* Act
+            await request(app).post("/auth/register").send(userData);
+
+            //* Assert
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            const user = users[0];
+            expect(user.email).toBe(userData.email.trim());
         });
     });
 });
