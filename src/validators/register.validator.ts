@@ -3,6 +3,7 @@ import { checkSchema } from "express-validator";
 export default checkSchema({
     firstName: {
         in: ["body"],
+        trim: true,
         errorMessage: "First name is required",
         isString: {
             errorMessage: "First name must be a valid string",
@@ -10,11 +11,11 @@ export default checkSchema({
         notEmpty: {
             errorMessage: "First name cannot be empty",
         },
-        trim: true,
         escape: true,
     },
     lastName: {
         in: ["body"],
+        trim: true,
         errorMessage: "Last name is required",
         isString: {
             errorMessage: "Last name must be a valid string",
@@ -22,13 +23,12 @@ export default checkSchema({
         notEmpty: {
             errorMessage: "Last name cannot be empty",
         },
-        trim: true,
         escape: true,
     },
     email: {
         in: ["body"],
-        errorMessage: "Email is required",
         trim: true,
+        errorMessage: "Email is required",
         isEmail: {
             errorMessage: "Email must be a valid email address",
         },
@@ -39,6 +39,7 @@ export default checkSchema({
     },
     password: {
         in: ["body"],
+        trim: true,
         errorMessage: "Password is required",
         isString: {
             errorMessage: "Password must be a valid string",
