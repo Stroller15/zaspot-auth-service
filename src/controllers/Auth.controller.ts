@@ -20,6 +20,7 @@ export class AuthController {
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
+
         const { firstName, lastName, email, password, role } = req.body;
 
         this.logger.debug("New register to register a user", {
@@ -37,8 +38,22 @@ export class AuthController {
                 password,
                 role,
             });
-            console.log(user);
+
             this.logger.info("User has been registered", { id: user.id });
+            const accessToken = "akfjkjdfkdjfd";
+            const refreshToken = "kjfkjdfjdkf";
+            res.cookie("accessToken", accessToken, {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60, //1hr
+                httpOnly: true,
+            });
+            res.cookie("refreshToken", refreshToken, {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60 * 24 * 365, //1yr
+                httpOnly: true,
+            });
             res.status(201).json(user);
         } catch (error) {
             next(error);
