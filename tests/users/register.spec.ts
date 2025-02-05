@@ -187,6 +187,21 @@ describe("POST /auth/register", () => {
             expect(isJwt(accessToken)).toBeTruthy();
             expect(isJwt(refreshToken)).toBeTruthy();
         });
+
+        it("should store the refresh token in the database", async () => {
+            //* Arrange
+            const userData = {
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                password: "P@ssw0rd1",
+            };
+
+            //* Act
+            await request(app).post("/auth/register").send(userData);
+
+            //* Assert
+        });
     });
     describe("Fields are missing", () => {
         it("should return 400 status code if email field is missing", async () => {
