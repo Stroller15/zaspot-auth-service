@@ -63,24 +63,26 @@ export class AuthController {
                 sub: String(user.id),
                 role: user.role,
             };
+            //create access token
             const accessToken = sign(payload, privateKey, {
                 algorithm: "RS256",
                 expiresIn: "1h",
                 issuer: "auth-service",
             });
-
+            //create refresh token
             const refreshToken = sign(payload, Config.REFRESH_TOKEN_SECRET!, {
                 algorithm: "HS256",
                 expiresIn: "1y",
                 issuer: "auth-service",
             });
-
+            //set access token
             res.cookie("accessToken", accessToken, {
                 domain: "localhost",
                 sameSite: "strict",
                 maxAge: 1000 * 60 * 60, //1hr
                 httpOnly: true,
             });
+            //set refresh token
             res.cookie("refreshToken", refreshToken, {
                 domain: "localhost",
                 sameSite: "strict",
