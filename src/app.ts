@@ -10,7 +10,7 @@ app.get("/", (req: Request, res: Response) => {
     res.send("Welcome to auth service");
 });
 
-import authRouter from "./routes/auth.route";
+import authRouter from "./routes/AuthRoute";
 app.use("/auth", authRouter);
 
 //*** golbal error handling

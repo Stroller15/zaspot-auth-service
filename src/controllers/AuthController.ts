@@ -1,20 +1,20 @@
-import fs from "fs";
-import path from "path";
 import { NextFunction, Response } from "express";
 import { RegisterUserRequest } from "../types";
-import { AuthService } from "../services/Auth.service";
+import { AuthService } from "../services/AuthService";
 import { Logger } from "winston";
 import { validationResult } from "express-validator";
 import { JwtPayload, sign } from "jsonwebtoken";
-import createHttpError from "http-errors";
 import { Config } from "../config";
 import { AppDataSource } from "../config/data-source";
 import { RefreshToken } from "../entity/RefreshToken";
+import { get } from "http";
+import { TokenService } from "../services/TokenService";
 
 export class AuthController {
     constructor(
         private authService: AuthService,
         private logger: Logger,
+        private tokenService: TokenService,
     ) {}
 
     async register(
@@ -48,29 +48,12 @@ export class AuthController {
 
             this.logger.info("User has been registered", { id: user.id });
 
-            let privateKey: Buffer;
-            try {
-                privateKey = fs.readFileSync(
-                    path.join(__dirname, "../../certs/private.pem"),
-                );
-            } catch (error) {
-                const err = createHttpError(
-                    500,
-                    "Error while reading private key",
-                );
-                next(err);
-                return;
-            }
             const payload: JwtPayload = {
                 sub: String(user.id),
                 role: user.role,
             };
-            //create access token
-            const accessToken = sign(payload, privateKey, {
-                algorithm: "RS256",
-                expiresIn: "1h",
-                issuer: "auth-service",
-            });
+
+            const accessToken = this.tokenService.generateAccessToken(payload);
 
             //persist the refresh token
             const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365; // 1 yr todo: implement for leap year as well
@@ -81,12 +64,9 @@ export class AuthController {
                 expiresAt: new Date(Date.now() + MS_IN_YEAR),
             });
 
-            //create refresh token
-            const refreshToken = sign(payload, Config.REFRESH_TOKEN_SECRET!, {
-                algorithm: "HS256",
-                expiresIn: "1y",
-                issuer: "auth-service",
-                jwtid: String(newRefreshToken.id),
+            const refreshToken = this.tokenService.generateRefreshToken({
+                ...payload,
+                id: String(newRefreshToken.id),
             });
             //set access token
             res.cookie("accessToken", accessToken, {
