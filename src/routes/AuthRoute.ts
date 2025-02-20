@@ -12,12 +12,14 @@ import { User } from "../entity/User";
 import logger from "../config/logger";
 import registerValidator from "../validators/register.validator";
 import { TokenService } from "../services/TokenService";
+import { RefreshToken } from "../entity/RefreshToken";
 
 const router = Router();
 
 const userRepository = AppDataSource.getRepository(User);
 const authService = new AuthService(userRepository);
-const tokenService = new TokenService();
+const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
+const tokenService = new TokenService(refreshTokenRepository);
 const authController = new AuthController(authService, logger, tokenService);
 
 router.post("/register", registerValidator, (async (
