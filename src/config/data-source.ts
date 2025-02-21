@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
     database: Config.DB_NAME,
     //Don't use this in production When synchronize is set to true, TypeORM automatically updates the database schema to match the entities in your code every time the application starts.
     // synchronize: Config.NODE_ENV === "test" || Config.NODE_ENV === "dev",
-    synchronize: false,
+    synchronize: true,
     logging: false,
     entities: [User, RefreshToken],
     migrations: [],
