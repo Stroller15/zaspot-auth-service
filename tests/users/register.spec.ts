@@ -21,7 +21,8 @@ describe("POST /auth/register", () => {
     afterAll(async () => {
         await connection?.destroy();
     });
-    describe("Given all fields", () => {
+
+    describe("Given valid credentials", () => {
         it("should return 201 status code", async () => {
             // AAA formula for writing test case
             //* A -> Arrange
@@ -67,9 +68,7 @@ describe("POST /auth/register", () => {
             };
 
             //* A -> Act
-            const response = await request(app)
-                .post("/auth/register")
-                .send(userData);
+            await request(app).post("/auth/register").send(userData);
             //* Assert
             const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
@@ -215,7 +214,7 @@ describe("POST /auth/register", () => {
             expect(tokens).toHaveLength(1);
         });
     });
-    describe("Fields are missing", () => {
+    describe("Given invalid credentials", () => {
         it("should return 400 status code if email field is missing", async () => {
             //* Arrange
             const userData = {
