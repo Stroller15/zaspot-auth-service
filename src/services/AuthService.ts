@@ -32,4 +32,11 @@ export class AuthService {
             throw err;
         }
     }
+    async login(email: string) {
+        return await this.userRepository.findOne({
+            where: {
+                email,
+            },
+        });
+    }
 }
